@@ -9,9 +9,9 @@ router.post('/add', (req, res) => {
     console.log('data', req.body);
    
 
-    const { title, content,tags,selectedOption,url} = req.body;
+    const { title, content,tags,selectedOption,url,email} = req.body;
 
-    const note = new Note({ title, content,tags,selectedOption,url});
+    const note = new Note({ title, content,tags,selectedOption,url,email});
     console.log( 'han', note);
     note.save()
         .then(() => res.json(`Note Added: ${note.title}`))
@@ -21,9 +21,12 @@ router.post('/add', (req, res) => {
 });
 
 
-router.get('/get', (req, res) => {
-    Note.find()
-    .then((data)=>{console.log(data)
+router.post('/get', (req, res) => {
+
+     const email=req.body.email;
+     console.log('getindkjbsb',email)
+    Note.find({email:email})
+    .then((data)=>{
         res.json(data)})
         .catch(e=>res.json('not getting'))
 
@@ -35,6 +38,14 @@ router.delete('/:id',(req, res) => {
       .then(() => res.json('Note deleted.'))
       .catch(err => res.status(400).json('Error: ' + err));
   });
+
+  router.get('/:id', (req, res) => {
+    Note.findById(req.params.id)
+    .then((data)=>{console.log(data)
+        res.json(data)})
+        .catch(e=>res.json('not getting'))
+
+});
 
   router.post('/:id',(req, res) => {
     console.log("coing")

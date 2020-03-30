@@ -6,15 +6,27 @@ import Addnote from './components/addnote'
 import Homepage from './components/homepage'
 import Editnote from './components/editnote'
 
+import Signup from './components/usersignup'
+import Login from './components/userlogin'
+import PrivateRoute from './components/privateroutes';
+
+
+
+
+
 
 
 function App() {
   return (
     <Router>
-           <Route  path='/' exact component={Homepage} />
+           <Route  path='/' exact component={Login} />
+           <Route  path='/signup' exact component={Signup} />
 
-     <Route  path='/addnote' exact component={Addnote} />
-     <Route  path='/edit/:id' exact component={Editnote} />
+
+     <PrivateRoute  path='/addnote' exact component={Addnote} />
+     <PrivateRoute path='/homepage' exact component={Homepage} />
+
+     <PrivateRoute  path='/edit/:id' exact component={Editnote} />
 
 
 

@@ -21,13 +21,17 @@ mongoose.connect('mongodb://localhost:27017/Notes', {useNewUrlParser: true}).the
 
 
 const noteRouter = require('./route/note.js');
+const userRouter = require('./route/user.js');
+
 
 
 app.use('/note', noteRouter);
+app.use('/user', userRouter);
+
 
 
 app.listen(5000, () => {
-    console.log("Server is running on port: 6000");
+    console.log("Server is running on port: 5000");
 });
 
 

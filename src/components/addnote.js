@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Jwt from 'jsonwebtoken';
 import Resizer from 'react-image-file-resizer';
-import Navbar from './navbar'
+import Navbar from './navbar';
+
 
 
 export default class Addnote extends Component {
@@ -16,6 +18,8 @@ export default class Addnote extends Component {
         this.onChangeAboutnote = this.onChangeAboutnote.bind(this);
 
         this.onSubmit = this.onSubmit.bind(this);
+        this.Logout = this.Logout.bind(this);
+
 
 
 
@@ -58,7 +62,7 @@ export default class Addnote extends Component {
                 300,
                 300,
                 'JPEG',
-                100,
+                90,
                 0,
                 uri => {
                     console.log(uri)
@@ -78,7 +82,15 @@ export default class Addnote extends Component {
         })
     }
 
-
+    Logout(e) {
+       // e.preventDefault();
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('t');
+    
+    
+        localStorage.removeItem("t");
+        window.location='/'
+    
+      }
 
     onChangeContent(e) {
         this.setState({
@@ -93,13 +105,21 @@ export default class Addnote extends Component {
     }
     onSubmit(e) {
         e.preventDefault();
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('t');
+
+
+        let token = localStorage.getItem('t');
+        const email = Jwt.verify(token, 'reactlogin');
+
+        console.log('getttinggg',email.email);
 
         const Note = {
             title: this.state.title,
             content: this.state.content,
             tags: this.state.tags,
             selectedOption: this.state.selectedOption,
-            url:this.state.url
+            url:this.state.url,
+            email:email.email
         }
 
 
@@ -214,7 +234,7 @@ export default class Addnote extends Component {
                         </div>
 
                     </form>
-
+                    <button onClick={()=>this.Logout()} className="btn btn-primary">Logout</button>
 
                 </body>
 

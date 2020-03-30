@@ -12,6 +12,8 @@ const notes = new schema({
     content: { type: String, required: true, trim: true },
     selectedOption: { type: String, required: true, trim: true },
     url: { type: String, required: true, trim: true },
+    email: { type: String, required: true, trim: true },
+
 
     tags: { type: String, required: true, trim: true },
            }, {

@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Jwt from 'jsonwebtoken';
 import Navbar from './navbar';
 
 
@@ -33,7 +34,10 @@ export default class Notes extends Component {
     componentDidMount() {
         // axios.defaults.headers.common['Authorization'] = localStorage.getItem('t');
         console.log('hello');
-        axios.get('http://localhost:5000/note/get')
+        let token = localStorage.getItem('t');
+        const email = Jwt.verify(token, 'reactlogin');
+        console.log('getdvd',email);
+        axios.post('http://localhost:5000/note/get',email)
             .then(response => {
                 console.log("getting", response);
                 this.setState({ notes: response.data })
@@ -73,17 +77,17 @@ export default class Notes extends Component {
                 <body className="container">
                     <div>
                       
-                        <div class="row">
+                        <div className="row">
                             
-                            <div class="col-12">
-                                <div class="input-group">
-                                <div class="input-group-append">
+                            <div className="col-12">
+                                <div className="input-group">
+                                <div className="input-group-append">
                                         <button  onClick={()=>window.location='/addnote'} className="btn btn-primary" type="button">
                                             Add
                                         </button>
                                     </div>
-                                    <input class="form-control border-secondary py-2" type="search"  placeholder="Search For Note By Title ..." />
-                                    <div class="input-group-append">
+                                    <input className="form-control border-secondary py-2" type="search"  placeholder="Search For Note By Title ..." />
+                                    <div className="input-group-append">
                                         <button className="btn btn-primary" type="button">
                                             Search
                                         </button>
@@ -113,11 +117,12 @@ export default class Notes extends Component {
                             <tbody>
                                 {
                                     this.state.notes.map(item => (
-                                        <tr>
+                                        <tr  key={item._id}>
+                                           
                                             <td>{item.title}</td>
                                             <td>{item.content}</td>
                                             <td>{item.selectedOption}</td>
-                                            <td><img src={item.url} /></td>
+                                            <td><img src={item.url} alt="" /></td>
                                             <td>{item.updatedAt}</td>
 
                                             {/* <td> <form onSubmit={() => this.deleteProduct(item._id)}>
