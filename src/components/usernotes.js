@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Jwt from 'jsonwebtoken';
-import Navbar from './navbar';
+import LoginNavbar from './startnavbar';
 
 
 
@@ -13,15 +13,14 @@ export default class Notes extends Component {
 
         this.deleteNote = this.deleteNote.bind(this);
         this.updateNote = this.updateNote.bind(this);
-        this.addLike = this.addLike.bind(this);
+       
 
-    
+
+        // this.onClick = this.onClick.bind(this);
 
         this.state = {
             search: ''
         }
-
-        
 
         this.state = { notes: [] };
     }
@@ -33,13 +32,15 @@ export default class Notes extends Component {
     }
 
     componentDidMount() {
-      
-        axios.get('http://localhost:5000/note/get',)
+        axios.defaults.headers.common['Authorization'] = localStorage.getItem('t');
+        console.log('hello');
+        let token = localStorage.getItem('t');
+        const email = Jwt.verify(token, 'reactlogin');
+        console.log('getdvd',email);
+        axios.post('http://localhost:5000/note/usernotes',email)
             .then(response => {
                 console.log("getting", response);
                 this.setState({ notes: response.data })
-                this.setState({ likes: response.data.likes })
-
             })
             .catch((error) => {
                 console.log(error);
@@ -57,30 +58,6 @@ export default class Notes extends Component {
         })
     }
 
-    addLike(id)  {
-  
-    
-
-    axios.post('http://localhost:5000/note/likes/' + id)
-      .then(res => {console.log(res.data)
-        this.setState({
-            messages: res.data
-        })
-        axios.get('http://localhost:5000/note/get',)
-        .then(response => {
-            console.log("getting", response);
-            this.setState({ notes: response.data })
-            this.setState({ likes: response.data.likes })
-
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-    });
-       
-       // window.location='/'
-      };
-
     updateNote(id, e) {
         // e.preventDefault();
         console.log(id);
@@ -93,7 +70,7 @@ export default class Notes extends Component {
     render() {
         return (
             <div>
-                <Navbar />
+                <LoginNavbar />
                 <br></br>
                 <br></br>
                 <br></br>
@@ -130,10 +107,10 @@ export default class Notes extends Component {
                                     <th className="align-middle text-center">Content</th>
                                     <th className="align-middle text-center">About Note</th>
                                     <th className="align-middle text-center">Image</th>
+
+
                                     <th className="align-middle text-center">Updated Date</th>
                                     <th className="align-middle text-center">Actions</th>
-                                    <th className="align-middle text-center">Likes</th>
-
 
                                 </tr>
                             </thead>
@@ -148,13 +125,16 @@ export default class Notes extends Component {
                                             <td><img src={item.url} alt="" /></td>
                                             <td>{item.updatedAt}</td>
 
-                                           
+                                            {/* <td> <form onSubmit={() => this.deleteProduct(item._id)}>
+                                                <div className="form-group">
+                                                    <input type="submit" value="Delete" className="btn btn-primary" />
+                                                </div>
+                                            </form> */}
 
 
-                                          <td>  <button onClick={() => this.deleteNote(item._id)} className="btn btn-primary">Delete</button> || <button onClick={() => this.updateNote(item._id)} className="btn btn-primary">Update</button></td>
+                                          <td>  <button onClick={() => this.deleteNote(item._id)} className="btn btn-primary">Delete</button>|| <button onClick={() => this.updateNote(item._id)} className="btn btn-primary">Update</button></td>
 
-                                  
-                                           <td>  <button className="btn btn-info" onClick= {()=>this.addLike(item._id)} > likes:{item.likes} </button> </td>
+
                                         </tr>
                                     ))
                                 }

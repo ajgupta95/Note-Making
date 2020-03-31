@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import StartingNavbar from './startnavbar'
+import Navbar from './navbar'
 
 
 export default class UserLogin extends Component {
@@ -63,7 +63,7 @@ export default class UserLogin extends Component {
 
            
     })
-    window.location = '/homepage';
+    window.location = '/usernotes';
 
        }});
       
@@ -81,7 +81,7 @@ export default class UserLogin extends Component {
       const message=this.state.messages
     return (
       <div>
-        <StartingNavbar/>
+        <Navbar/>
           <h3>{message}</h3>
           <h4>Does not have a account then: Sign Up</h4>
 

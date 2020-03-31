@@ -8,6 +8,8 @@ import Editnote from './components/editnote'
 
 import Signup from './components/usersignup'
 import Login from './components/userlogin'
+import UserNotes from './components/usernotes';
+
 import PrivateRoute from './components/privateroutes';
 
 
@@ -19,12 +21,13 @@ import PrivateRoute from './components/privateroutes';
 function App() {
   return (
     <Router>
-           <Route  path='/' exact component={Login} />
+           <Route  path='/login' exact component={Login} />
            <Route  path='/signup' exact component={Signup} />
 
+           <PrivateRoute  path='/usernotes' exact component={UserNotes} />
 
      <PrivateRoute  path='/addnote' exact component={Addnote} />
-     <PrivateRoute path='/homepage' exact component={Homepage} />
+     <Route path='/' exact component={Homepage} />
 
      <PrivateRoute  path='/edit/:id' exact component={Editnote} />
 

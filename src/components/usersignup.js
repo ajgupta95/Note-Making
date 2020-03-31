@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
-import StartingNavbar from './startnavbar'
+import Navbar from './navbar'
 
 
 export default class Usersignup extends Component {
@@ -110,7 +110,7 @@ export default class Usersignup extends Component {
       const message=this.state.messages
     return (
       <div>
-        <StartingNavbar/>
+        <Navbar/>
         
 
           <h3>{message}</h3>

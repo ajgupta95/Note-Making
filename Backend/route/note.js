@@ -8,10 +8,10 @@ const router = Router();
 router.post('/add', (req, res) => {
     console.log('data', req.body);
    
-
+    const likes =0;
     const { title, content,tags,selectedOption,url,email} = req.body;
 
-    const note = new Note({ title, content,tags,selectedOption,url,email});
+    const note = new Note({ title, content,tags,selectedOption,url,email,likes});
     console.log( 'han', note);
     note.save()
         .then(() => res.json(`Note Added: ${note.title}`))
@@ -21,14 +21,23 @@ router.post('/add', (req, res) => {
 });
 
 
-router.post('/get', (req, res) => {
+router.get('/get', (req, res) => {
 
-     const email=req.body.email;
-     console.log('getindkjbsb',email)
-    Note.find({email:email})
+   
+    Note.find()
     .then((data)=>{
         res.json(data)})
         .catch(e=>res.json('not getting'))
+
+});
+router.post('/usernotes', (req, res) => {
+
+   console.log(req.body);
+   const email=req.body.email
+  Note.find({email:email})
+  .then((data)=>{
+      res.json(data)})
+      .catch(e=>res.json('not getting'))
 
 });
 
@@ -45,6 +54,26 @@ router.delete('/:id',(req, res) => {
         res.json(data)})
         .catch(e=>res.json('not getting'))
 
+});
+
+router.post('/likes/:id',(req, res) => {
+  console.log("coing",req.body)
+  Note.findById(req.params.id)
+    .then(pro => {
+      console.log(pro);
+      pro.likes +=1 ;
+     
+
+
+
+
+      pro.save()
+        .then(() => res.json('Like added!'))
+        .catch(err => {
+          console.log(err);
+          res.status(400).json('Error: ' + err)});
+    })
+    .catch(err => {res.status(400).json('Error: ' + err)});
 });
 
   router.post('/:id',(req, res) => {

@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import axios from 'axios';
 import Jwt from 'jsonwebtoken';
 import Resizer from 'react-image-file-resizer';
-import Navbar from './navbar';
+import LoginNavbar from './startnavbar';
+
 
 
 
@@ -156,7 +157,7 @@ export default class Addnote extends Component {
         return (
             <div>
 
-                <Navbar />
+                <LoginNavbar/>
                 <body className="container">
                     <h3>{message}</h3>
                     <br></br>
