@@ -21,13 +21,13 @@ import PrivateRoute from './components/privateroutes';
 function App() {
   return (
     <Router>
-           <Route  path='/login' exact component={Login} />
-           <Route  path='/signup' exact component={Signup} />
+           <Route  path='/' exact component={Login} />
+           <PrivateRoute  path='/homepage' exact component={Homepage} />
 
            <PrivateRoute  path='/usernotes' exact component={UserNotes} />
 
      <PrivateRoute  path='/addnote' exact component={Addnote} />
-     <Route path='/' exact component={Homepage} />
+     <Route path='/signup' exact component={Signup} />
 
      <PrivateRoute  path='/edit/:id' exact component={Editnote} />
 

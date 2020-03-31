@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Jwt from 'jsonwebtoken';
-import Navbar from './navbar';
+import StartNavbar from './startnavbar';
 
 
 
@@ -21,10 +21,14 @@ export default class Notes extends Component {
             search: ''
         }
 
+        this.state={
+            messages:''
+        }
+
         
 
         this.state = { notes: [] };
-    }
+        }
 
     onChangeSearch(e) {
         this.setState({
@@ -59,9 +63,17 @@ export default class Notes extends Component {
 
     addLike(id)  {
   
-    
+        let token = localStorage.getItem('t');
+        const email = Jwt.verify(token, 'reactlogin');
 
-    axios.post('http://localhost:5000/note/likes/' + id)
+        console.log('getttinggg',email.email);
+
+        const sending ={
+            email:email.email,
+            id:id
+        }
+
+    axios.post('http://localhost:5000/note/likes/', sending)
       .then(res => {console.log(res.data)
         this.setState({
             messages: res.data
@@ -91,9 +103,12 @@ export default class Notes extends Component {
 
 
     render() {
+        const message=this.state.messages
+
         return (
             <div>
-                <Navbar />
+                <h3>{message}</h3>
+                <StartNavbar />
                 <br></br>
                 <br></br>
                 <br></br>
@@ -130,7 +145,7 @@ export default class Notes extends Component {
                                     <th className="align-middle text-center">Content</th>
                                     <th className="align-middle text-center">About Note</th>
                                     <th className="align-middle text-center">Image</th>
-                                    <th className="align-middle text-center">Updated Date</th>
+                                    <th className="align-middle text-center">Created Date</th>
                                     <th className="align-middle text-center">Actions</th>
                                     <th className="align-middle text-center">Likes</th>
 
@@ -146,7 +161,7 @@ export default class Notes extends Component {
                                             <td>{item.content}</td>
                                             <td>{item.selectedOption}</td>
                                             <td><img src={item.url} alt="" /></td>
-                                            <td>{item.updatedAt}</td>
+                                            <td>{item.createdAt}</td>
 
                                            
 

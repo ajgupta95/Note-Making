@@ -1,6 +1,7 @@
 
 const { Router } = require('express');
 const Note = require('../model/note.js');
+const User =require('../model/user');
 
 const router = Router();
 
@@ -56,24 +57,44 @@ router.delete('/:id',(req, res) => {
 
 });
 
-router.post('/likes/:id',(req, res) => {
+router.post('/likes/',(req, res) => {
+
+const {id,email}=req.body;
+
+User.findOne({email:email}).then((data)=>{
+console.log("geeting user",data);
+
+const idd=data.likes.find((e)=>e===id);
+console.log(idd);
+ if(idd===undefined){
+   console.log('here',data.likes)
+  data.likes.push(id);
+  console.log('now',data.likes)
+  data.save()
+  .then(()=>console.log("id added"))
+  .catch(err=>console.log("Not added"))
+  Note.findById(id)
+  .then(pro => {
+    console.log(pro);
+    pro.likes +=1 ;
+    console.log("update",pro.updatedAt)
+    pro.updatedAt=pro.updatedAt;
+    pro.save()
+      .then(() => res.json('Like added!'))
+      .catch(err => {
+        console.log(err);
+        res.status(400).json('Error: ' + err)});
+  })
+  .catch(err => {res.status(400).json('Error: ' + err)});
+  
+ }else{
+   res.json("Already Liked")
+ }
+   
+})
+  
   console.log("coing",req.body)
-  Note.findById(req.params.id)
-    .then(pro => {
-      console.log(pro);
-      pro.likes +=1 ;
-     
-
-
-
-
-      pro.save()
-        .then(() => res.json('Like added!'))
-        .catch(err => {
-          console.log(err);
-          res.status(400).json('Error: ' + err)});
-    })
-    .catch(err => {res.status(400).json('Error: ' + err)});
+  
 });
 
   router.post('/:id',(req, res) => {

@@ -53,7 +53,12 @@ export default class UserLogin extends Component {
           this.setState({
             messages:res.data
         })
-      }else{
+      }else if(res.data==="User not exits Sign In First"){
+        this.setState({
+          messages:res.data
+      })
+    }
+      else{
           console.log(res.data);
           localStorage.setItem('t',res.data.t);
           axios.defaults.headers.common['Authorization'] = `${res.data.t}` 
@@ -63,7 +68,7 @@ export default class UserLogin extends Component {
 
            
     })
-    window.location = '/usernotes';
+    window.location = '/homepage';
 
        }});
       

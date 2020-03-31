@@ -12,8 +12,10 @@ const router=Router();
 router.post('/adduser',(req, res) => {
   const email = req.body.email;
   const password=req.body.password;
+  const likes=[];
 
-  const newUser = new User({email,password});
+
+  const newUser = new User({email,password,likes});
 
   
     User.find({email:email}).then((ress)=>{
