@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 
-import Navbar from './navbar';
+import NavbarStart from './startnavbar';
 
 
 export default class EditNotes extends Component {
@@ -123,7 +123,7 @@ export default class EditNotes extends Component {
         const message = this.state.messages
         return (
             <div>
-                <Navbar />
+                <NavbarStart />
 
                 <body className="container">
                     <h3>{message}</h3>
