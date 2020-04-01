@@ -11,10 +11,12 @@
     "cors": "^2.8.5",
     "express": "^4.17.1",
     "jsonwebtoken": "^8.5.1",
+    "moment": "^2.24.0",
     "mongoose": "^5.9.4",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-image-file-resizer": "^0.2.1",
+    "react-moment": "^0.9.7",
     "react-router-dom": "^5.1.2",
     "react-scripts": "3.4.1"
   },

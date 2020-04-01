@@ -14,6 +14,8 @@ const notes = new schema({
     url: { type: String, required: true, trim: true },
     email: { type: String, required: true, trim: true },
     likes: { type: Number, required: true, trim: true },
+    comments: { type: Array, required: true, trim: true },
+
 
 
 

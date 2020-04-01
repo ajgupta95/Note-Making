@@ -60,8 +60,8 @@ export default class Addnote extends Component {
         if(fileInput) {
             Resizer.imageFileResizer(
                 e.target.files[0],
-                300,
-                300,
+                200,
+                200,
                 'JPEG',
                 90,
                 0,

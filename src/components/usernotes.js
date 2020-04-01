@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Jwt from 'jsonwebtoken';
+import Moment from 'react-moment';
+
 import LoginNavbar from './startnavbar';
 
 
@@ -123,7 +125,9 @@ export default class Notes extends Component {
                                             <td>{item.content}</td>
                                             <td>{item.selectedOption}</td>
                                             <td><img src={item.url} alt="" /></td>
-                                            <td>{item.updatedAt}</td>
+                                            <td> <Moment format="YYYY/MM/DD HH:mm">
+                                                {item.updatedAt}
+                                                 </Moment></td>
 
                                             {/* <td> <form onSubmit={() => this.deleteProduct(item._id)}>
                                                 <div className="form-group">

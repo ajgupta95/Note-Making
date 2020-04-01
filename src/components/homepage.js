@@ -1,6 +1,7 @@
 import React, { Component } from 'react';
 import axios from 'axios';
 import Jwt from 'jsonwebtoken';
+import Moment from 'react-moment';
 import StartNavbar from './startnavbar';
 
 
@@ -14,21 +15,30 @@ export default class Notes extends Component {
         this.deleteNote = this.deleteNote.bind(this);
         this.updateNote = this.updateNote.bind(this);
         this.addLike = this.addLike.bind(this);
+        this.addComment = this.addComment.bind(this);
+        this.onChangeComment = this.onChangeComment.bind(this);
+        this.input = React.createRef();
+        ;
 
-    
+
+
+
 
         this.state = {
             search: ''
         }
 
-        this.state={
-            messages:''
+        this.state = {
+            messages: ''
         }
 
-        
+        this.state = {
+            comment: []
+        }
+
 
         this.state = { notes: [] };
-        }
+    }
 
     onChangeSearch(e) {
         this.setState({
@@ -36,9 +46,15 @@ export default class Notes extends Component {
         })
     }
 
-    componentDidMount() {
-      
-        axios.get('http://localhost:5000/note/get',)
+    onChangeComment(e) {
+        this.setState({
+            comment: e.target.value
+        })
+    }
+
+    componentWillMount() {
+
+        axios.get('http://localhost:5000/note/get')
             .then(response => {
                 console.log("getting", response);
                 this.setState({ notes: response.data })
@@ -61,49 +77,64 @@ export default class Notes extends Component {
         })
     }
 
-    addLike(id)  {
-  
+    addLike(id) {
+
         let token = localStorage.getItem('t');
         const email = Jwt.verify(token, 'reactlogin');
 
-        console.log('getttinggg',email.email);
+        console.log('getttinggg', email.email);
 
-        const sending ={
-            email:email.email,
-            id:id
+        const sending = {
+            email: email.email,
+            id: id
         }
 
-    axios.post('http://localhost:5000/note/likes/', sending)
-      .then(res => {console.log(res.data)
-        this.setState({
-            messages: res.data
-        })
-        axios.get('http://localhost:5000/note/get',)
-        .then(response => {
-            console.log("getting", response);
-            this.setState({ notes: response.data })
-            this.setState({ likes: response.data.likes })
+        axios.post('http://localhost:5000/note/likes/', sending)
+            .then(res => {
+                console.log(res.data)
+                this.setState({
+                    messages: res.data
+                })
+                axios.get('http://localhost:5000/note/get')
+                    .then(response => {
+                        console.log("getting", response);
+                        this.setState({ notes: response.data })
+                        this.setState({ likes: response.data.likes })
 
-        })
-        .catch((error) => {
-            console.log(error);
-        })
-    });
-       
-       // window.location='/'
-      };
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
+            });
+
+        // window.location='/'
+    };
+    addComment(id) {
+
+        const comments = this.state.comment
+        console.log("comment", comments);
+        const data = {
+
+            comment: comments,
+            id: id
+        }
+        console.log("comment data", data);
+        axios.post('http://localhost:5000/note/comment/', data)
+            .then((res) => console.log(res))
+
+    }
 
     updateNote(id, e) {
         // e.preventDefault();
         console.log(id);
         window.location = '/edit/' + id;
     }
-  
-  
+
+
 
 
     render() {
-        const message=this.state.messages
+        const message = this.state.messages
 
         return (
             <div>
@@ -114,17 +145,17 @@ export default class Notes extends Component {
                 <br></br>
                 <body className="container">
                     <div>
-                      
+
                         <div className="row">
-                            
+
                             <div className="col-12">
                                 <div className="input-group">
-                                <div className="input-group-append">
-                                        <button  onClick={()=>window.location='/addnote'} className="btn btn-primary" type="button">
+                                    <div className="input-group-append">
+                                        <button onClick={() => window.location = '/addnote'} className="btn btn-primary" type="button">
                                             Add
                                         </button>
                                     </div>
-                                    <input className="form-control border-secondary py-2" type="search"  placeholder="Search For Note By Title ..." />
+                                    <input className="form-control border-secondary py-2" type="search" placeholder="Search For Note By Title ..." />
                                     <div className="input-group-append">
                                         <button className="btn btn-primary" type="button">
                                             Search
@@ -146,7 +177,7 @@ export default class Notes extends Component {
                                     <th className="align-middle text-center">About Note</th>
                                     <th className="align-middle text-center">Image</th>
                                     <th className="align-middle text-center">Created Date</th>
-                                    <th className="align-middle text-center">Actions</th>
+                                    <th className="align-middle text-center">Comments</th>
                                     <th className="align-middle text-center">Likes</th>
 
 
@@ -155,21 +186,35 @@ export default class Notes extends Component {
                             <tbody>
                                 {
                                     this.state.notes.map(item => (
-                                        <tr  key={item._id}>
-                                           
+                                        <tr key={item._id}>
+
                                             <td>{item.title}</td>
                                             <td>{item.content}</td>
                                             <td>{item.selectedOption}</td>
                                             <td><img src={item.url} alt="" /></td>
-                                            <td>{item.createdAt}</td>
+                                            <td> <Moment format="YYYY/MM/DD HH:mm">
+                                                {item.createdAt}
+                                            </Moment></td>
 
-                                           
 
 
-                                          <td>  <button onClick={() => this.deleteNote(item._id)} className="btn btn-primary">Delete</button> || <button onClick={() => this.updateNote(item._id)} className="btn btn-primary">Update</button></td>
 
-                                  
-                                           <td>  <button className="btn btn-info" onClick= {()=>this.addLike(item._id)} > likes:{item.likes} </button> </td>
+                                            {/* <td>  <button onClick={() => this.deleteNote(item._id)} className="btn btn-primary">Delete</button> || <button onClick={() => this.updateNote(item._id)} className="btn btn-primary">Update</button></td> */}
+
+                                            <td key={item._id}>
+                                                <div className="form-group">
+                                                    <label>Comments: </label>
+                                                    <input type="text"
+                                                        required
+                                                        className="form-control"
+                                                        value={this.state.comment}
+                                                        onChange={this.onChangeComment}
+                                                    />
+
+                                                    <button className="btn btn-info" onClick={() => this.addComment(item._id)} >Comment</button>
+                                                </div>
+                                            </td>
+                                            <td>  <button className="btn btn-info" onClick={() => this.addLike(item._id)} > likes:{item.likes} </button> </td>
                                         </tr>
                                     ))
                                 }
@@ -178,7 +223,7 @@ export default class Notes extends Component {
                     </div>
 
 
-                 
+
 
 
                 </body>
