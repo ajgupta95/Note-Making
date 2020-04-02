@@ -114,11 +114,20 @@ router.post('/likes/', (req, res) => {
 
 
 router.post('/comment/', (req, res) => {
-     const {id,name,comment}=req.body;
+     const {id,email,comment}=req.body;
      console.log(req.body);
-     Note.findById(id).then((res)=>{
-       console.log(res)})
-
+     Note.findById(id).then((ress)=>{
+       console.log(ress)
+       const cmt={
+        name:email,
+        comment:comment
+      }
+      console.log("what to save",cmt)
+      ress.comments.push(cmt);
+      ress.save()
+      .then(()=>res.json("Comment added"))
+});
+      
 })
 
 
