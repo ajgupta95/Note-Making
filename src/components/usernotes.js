@@ -37,9 +37,9 @@ export default class Notes extends Component {
         axios.defaults.headers.common['Authorization'] = localStorage.getItem('t');
         console.log('hello');
         let token = localStorage.getItem('t');
-        const email = Jwt.verify(token, 'reactlogin');
-        console.log('getdvd',email);
-        axios.post('http://localhost:5000/note/usernotes',email)
+        const data = Jwt.verify(token, 'reactlogin');
+        console.log('getdvd',data);
+        axios.post('http://localhost:5000/note/usernotes',data)
             .then(response => {
                 console.log("getting", response);
                 this.setState({ notes: response.data })
@@ -136,7 +136,7 @@ export default class Notes extends Component {
                                             </form> */}
 
 
-                                          <td>  <button onClick={() => this.deleteNote(item._id)} className="btn btn-primary">Delete</button>|| <button onClick={() => this.updateNote(item._id)} className="btn btn-primary">Update</button></td>
+                                          <td>  <button onClick={() => this.deleteNote(item._id)} ><i className="fa fa-trash fa-lg text-danger"></i></button>|| <button onClick={() => this.updateNote(item._id)} ><i class="fa fa-pencil fa-lg text-primary"></i></button></td>
 
 
                                         </tr>

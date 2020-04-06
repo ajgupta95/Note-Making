@@ -18,9 +18,11 @@ export default class Notes extends Component {
         this.updateNote = this.updateNote.bind(this);
         this.addLike = this.addLike.bind(this);
         this.addComment = this.addComment.bind(this);
-        //this.onChangeComment = this.onChangeComment.bind(this);
+        this.onSearch = this.onSearch.bind(this);
+
+
         this.input = React.createRef();
-        
+
 
 
 
@@ -31,32 +33,74 @@ export default class Notes extends Component {
         }
 
         this.state = {
-            messages: ''
+            messages: '',
+            savenotes:[]
         }
 
-        // this.state = {
-        //     comment: ''
-        // }
+
 
 
         this.state = { notes: [] };
-    }
+                  }
 
     onChangeSearch(e) {
+
+
+        // this.setState({
+        //     search: e.target.value
+        // })
+        let searchvalue=e.target.value;
+        let purenote=this.state.savenotes;
+        let notes=this.state.notes;
+        console.log('hereee',notes);
+        console.log('search',searchvalue);
+        let newNotes=[];
+
+        // const newNote=notes.filter((note)=>{
+            
+        //     // if(searchvalue!==''){
+        //     //     return 
+        //     // }
+        //     return note.title===searchvalue
+        // })
+        // console.log('hereee now',newNote);
+
+        // this.setState({
+        //     notes: newNote
+        // })
+    if(e.target.value !== ""){
+        newNotes=notes.filter(item=>{
+            const note=item.title.toLowerCase();
+            const filter=searchvalue.toLowerCase();
+            console.log("ijej",note.includes(filter))
+            return note.includes(filter);
+        });
         this.setState({
-            search: e.target.value
-        })
+            notes:newNotes
+        });
+    }else{
+        const purenote=this.state.savenotes
+        console.log('savenote dswdqwdw',purenote)
+        // axios.get('http://localhost:5000/note/get')
+        // .then(response => {
+        //     console.log("getting", response);
+        //     this.setState({ notes: response.data })
+        //     this.setState({ likes: response.data.likes })
+
+        // })
+        // .catch((error) => {
+        //     console.log(error);
+        // })
+        this.setState({
+            notes:purenote
+        });
+    }
+   
+      
+
     }
 
-    // onChangeComment(e) {
 
-    //     console.log("idddd", e.target.id)
-    //     if (e.target.id) {
-    //         this.setState({
-    //             comment: e.target.value
-    //         })
-    //     }
-    // }
 
     componentWillMount() {
 
@@ -64,12 +108,34 @@ export default class Notes extends Component {
             .then(response => {
                 console.log("getting", response);
                 this.setState({ notes: response.data })
+                this.setState({ savenotes: response.data })
+
                 this.setState({ likes: response.data.likes })
 
             })
             .catch((error) => {
                 console.log(error);
             })
+    }
+    onSearch(){
+        const searchvalue=this.state.search;
+        const notes=this.state.notes;
+        console.log('hereee',notes);
+        console.log('search',searchvalue);
+
+        const newNote=notes.filter((note)=>{
+            
+            // if(searchvalue!==''){
+            //     return 
+            // }
+            return note.title===searchvalue
+        })
+        console.log('hereee now',newNote);
+
+        this.setState({
+            notes: newNote
+        })
+
     }
 
     deleteNote(id, e) {
@@ -86,12 +152,12 @@ export default class Notes extends Component {
     addLike(id) {
 
         let token = localStorage.getItem('t');
-        const email = Jwt.verify(token, 'reactlogin');
+        const data = Jwt.verify(token, 'reactlogin');
 
-        console.log('getttinggg', email.email);
+        console.log('getttinggg', data);
 
         const sending = {
-            email: email.email,
+            email: data.data.email,
             id: id
         }
 
@@ -113,49 +179,32 @@ export default class Notes extends Component {
                     })
             });
 
-        // window.location='/'
+
     };
-    // addComment(id) {
-
-    //     // this.setState({
-    //     //     comment: e.target.value
-    //     // })
 
 
-    //     const comments = this.state.comment
-    //     console.log("comment", comments);
-    //     const data = {
 
-    //         comment: comments,
-    //         id: id
-    //     }
-    //     console.log("comment data", data);
-    //     axios.post('http://localhost:5000/note/comment/', data)
-    //         .then((res) => console.log(res))
+    addComment(data, e) {
+        // e.preventDefault();
 
-    // }
+        console.log(data);
+        axios.post('http://localhost:5000/note/comment/', data)
+            .then((res) => {
+                console.log(res)
 
-
-    addComment(data,e){
-       // e.preventDefault();
-       
-       console.log(data);
-       axios.post('http://localhost:5000/note/comment/', data)
-            .then((res) => {console.log(res)
-                
                 this.setState({
                     messages: res.data
                 })
                 axios.get('http://localhost:5000/note/get')
-                .then(response => {
-                    console.log("getting", response);
-                    this.setState({ notes: response.data })
-                    this.setState({ likes: response.data.likes })
-    
-                })
-                .catch((error) => {
-                    console.log(error);
-                })
+                    .then(response => {
+                        console.log("getting", response);
+                        this.setState({ notes: response.data })
+                        this.setState({ likes: response.data.likes })
+
+                    })
+                    .catch((error) => {
+                        console.log(error);
+                    })
             })
     }
 
@@ -165,12 +214,12 @@ export default class Notes extends Component {
         window.location = '/edit/' + id;
     }
 
-    noteslist(){
-    return this.state.notes.map((notes)=>{
-      return  < Table func={this.addLike} cmt={this.addComment} notes={notes} />
-           
-     })
- 
+    noteslist() {
+        return this.state.notes.map((notes) => {
+            return < Table func={this.addLike} cmt={this.addComment} notes={notes} />
+
+        })
+
     }
 
 
@@ -194,13 +243,19 @@ export default class Notes extends Component {
                                 <div className="input-group">
                                     <div className="input-group-append">
                                         <button onClick={() => window.location = '/addnote'} className="btn btn-primary" type="button">
-                                            Add
+                                        <i className="fa fa-plus"></i>
+
+                                            
                                         </button>
                                     </div>
-                                    <input className="form-control border-secondary py-2" type="search" placeholder="Search For Note By Title ..." />
+                                    <input className="form-control border-secondary py-2" type="text" required
+                                        
+                                        value={this.state.search}
+                                        onChange={this.onChangeSearch} placeholder="Search For Note By Title ..." />
                                     <div className="input-group-append">
-                                        <button className="btn btn-primary" type="button">
-                                            Search
+                                        <button className="btn btn-primary" type="button" onClick={()=>this.onSearch}>
+                                        <i className="fa fa-search"></i>
+                                            
                                         </button>
                                     </div>
                                 </div>
@@ -225,63 +280,17 @@ export default class Notes extends Component {
 
                                 </tr>
                             </thead>
-                           
-                                {/* {
-                                    this.state.notes.map(item => (
-                                        <tr key={item._id}>
-
-                                            <td>{item.title}</td>
-                                            <td>{item.content}</td>
-                                            <td>{item.selectedOption}</td>
-                                            <td><img src={item.url} alt="" /></td>
-                                            <td> <Moment format="YYYY/MM/DD HH:mm">
-                                                {item.createdAt}
-                                            </Moment></td>
 
 
+                            <tbody>
+
+                                {this.noteslist()}
 
 
-                                            {/* <td>  <button onClick={() => this.deleteNote(item._id)} className="btn btn-primary">Delete</button> || <button onClick={() => this.updateNote(item._id)} className="btn btn-primary">Update</button></td> */}
-
-                                            {/* <td key={item._id}>
-                                            
-                                                    <label>Comments: </label>
-                                                    <input type="text"
-                                                        required
-                                                        id={item._id}
-                                                        className="form-control"
-                                                        value={this.state.comment}
-                                                        onChange={this.onChangeComment}
-                                                    />
-
-                                                    <button  className="btn btn-info" onClick={() => this.addComment(item._id)} >Comment</button>
-                                                
-                                            </td> */}
-                                            {/* <td>
-                                                <form onSubmit={this.addComment}>
-                                                    <label>
-                                                        Comment:
-                                                    <input type="text"
-                                                    id={item._id}
-                                                   
-                                                    ref={this.input} 
-                                                    />
-                                                    </label>
-                                                    <input className="btn btn-info" type="submit" value="Submit" />
-                                                </form>
-                                            </td>
-                                            <td>  <button className="btn btn-info" onClick={() => this.addLike(item._id)} > likes:{item.likes} </button> </td>
-                                        </tr>
-                                    ))
-                                } */} 
-                                 <tbody>
-                                 
-                                 {this.noteslist()} 
-                                 
-                                 
 
                             </tbody>
                         </table>
+                         
                     </div>
 
 

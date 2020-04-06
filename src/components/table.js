@@ -29,15 +29,15 @@ export default class Notes extends Component {
     onSubmit(e) {
         e.preventDefault();
         let token = localStorage.getItem('t');
-        const email = Jwt.verify(token, 'reactlogin');
+        const dataa = Jwt.verify(token, 'reactlogin');
 
-        console.log('getttinggg', email.email);
+        console.log('getttinggg', dataa);
         const id = this.props.notes._id
 
         const data = {
             comment: this.state.comment,
             id: id,
-            email: email.email
+            name: dataa.data.name
 
         }
         this.props.cmt(data);
@@ -65,7 +65,7 @@ export default class Notes extends Component {
                     {this.props.notes.createdAt}
                 </Moment></td>
                 <td>
-                    <form onSubmit={this.onSubmit}>
+                    <form onSubmit={this.onSubmit} className="input-group-append">
                         <label>
                            <b>Comment:</b> 
                                     <input type="text"
@@ -85,7 +85,7 @@ export default class Notes extends Component {
                         })}
                     </ul>
                 </td>
-                <td>  <button className="btn btn-info" onClick={() => this.props.func(this.props.notes._id)} > likes:{this.props.notes.likes} </button> </td>
+                <td>  <button className="btn btn-info" onClick={() => this.props.func(this.props.notes._id)} ><i className="fa fa-heart"></i> likes:{this.props.notes.likes} </button> </td>
 
 
 

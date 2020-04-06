@@ -8,6 +8,8 @@ export default class Usersignup extends Component {
     super(props);
 
     this.onChangeEmail = this.onChangeEmail.bind(this);
+    this.onChangeName = this.onChangeName.bind(this);
+
     this.onChangePassword = this.onChangePassword.bind(this);
     this.onChangecnfrmPassword = this.onChangecnfrmPassword.bind(this);
         this.onChangecnfrmPassword = this.onChangecnfrmPassword.bind(this);
@@ -20,7 +22,8 @@ export default class Usersignup extends Component {
 
 
     this.state = {
-      email: ''
+      email: '',
+      name:''
     }
     this.state = {
         password: ''
@@ -36,6 +39,11 @@ export default class Usersignup extends Component {
   onChangeEmail(e) {
     this.setState({
       email: e.target.value
+    })
+  }
+  onChangeName(e) {
+    this.setState({
+      name: e.target.value
     })
   }
 
@@ -72,6 +80,7 @@ export default class Usersignup extends Component {
 
     const user = {
       email: this.state.email,
+      name:this.state.name,
       password:this.state.password,
       cnpassword:this.state.Cnfrmpassword
     }
@@ -125,6 +134,15 @@ export default class Usersignup extends Component {
                 className="form-control"
                 value={this.state.email}
                 onChange={this.onChangeEmail}
+                />
+          </div>
+          <div className="form-group"> 
+            <label>Name: </label>
+            <input  type="text"
+                required
+                className="form-control"
+                value={this.state.name}
+                onChange={this.onChangeName}
                 />
           </div>
           <div className="form-group"> 

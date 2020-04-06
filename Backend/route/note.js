@@ -39,7 +39,7 @@ router.get('/get', (req, res) => {
 router.post('/usernotes', (req, res) => {
 
   console.log(req.body);
-  const email = req.body.email
+  const email = req.body.data.email
   Note.find({ email: email })
     .then((data) => {
       res.json(data)
@@ -114,12 +114,12 @@ router.post('/likes/', (req, res) => {
 
 
 router.post('/comment/', (req, res) => {
-     const {id,email,comment}=req.body;
+     const {id,name,comment}=req.body;
      console.log(req.body);
      Note.findById(id).then((ress)=>{
        console.log(ress)
        const cmt={
-        name:email,
+        name:name,
         comment:comment
       }
       console.log("what to save",cmt)

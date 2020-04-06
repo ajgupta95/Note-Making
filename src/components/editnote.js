@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import axios from 'axios';
+import Resizer from 'react-image-file-resizer';
 
 import NavbarStart from './startnavbar';
 
@@ -43,7 +44,7 @@ export default class EditNotes extends Component {
           title: response.data.title,
           content: response.data.content,
           tags: response.data.tags,
-          url: response.data.url,
+          
 
           selectedOption:response.data.selectedOption
           
@@ -71,9 +72,30 @@ export default class EditNotes extends Component {
   }
 
   onChangeImageurl(e) {
-    this.setState({
-      url: e.target.value
-    })
+   
+    var fileInput = false
+    console.log('getting',e.target.files[0])
+    if(e.target.files[0]) {
+        fileInput = true
+    }
+    if(fileInput) {
+        Resizer.imageFileResizer(
+            e.target.files[0],
+            200,
+            200,
+            'JPEG',
+            90,
+            0,
+            uri => {
+                console.log(uri)
+                this.setState({
+                    url:uri
+                })
+                
+            },
+            'base64'
+        );
+    }
   }
 
   onChangeAboutnote(e) {
@@ -164,12 +186,14 @@ export default class EditNotes extends Component {
                             <label>Image Url: </label>
                             
 
-                            <input type="text"
+                            <input type="file"
                                 required
                                 className="form-control"
-                                value={this.state.url}
+                                
                                 onChange={this.onChangeImageurl}
                             />
+
+                            
 
                         </div>
                         <div className="row">

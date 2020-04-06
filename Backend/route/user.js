@@ -12,10 +12,12 @@ const router=Router();
 router.post('/adduser',(req, res) => {
   const email = req.body.email;
   const password=req.body.password;
+  const name=req.body.name;
+
   const likes=[];
 
 
-  const newUser = new User({email,password,likes});
+  const newUser = new User({email,password,likes,name});
 
   
     User.find({email:email}).then((ress)=>{
@@ -37,8 +39,9 @@ router.post('/adduser',(req, res) => {
 });
 
 router.post('/login',(req, res) => {
-  const email = req.body.email;
-  const password=req.body.password;
+  const {email,password} = req.body
+  
+  
 
   User.findOne({email:email}).then(ress=>{
    if(ress===null) {
@@ -47,7 +50,14 @@ router.post('/login',(req, res) => {
     if(ress.password!==password.toString()){
      return  res.json("Plese Enter Correct Password")
     }
-    var token= jwt.sign({email:email},'reactlogin');
+
+    const data={
+      email:email,
+      name:ress.name
+    }
+    var token= jwt.sign({data},'reactlogin');
+    console.log("res",ress)
+
     console.log('jwtToken',token);
     //res.cookie('jwtTToken',token);
     res.json({msg:"logged in Successfull",t:token})

@@ -110,9 +110,9 @@ export default class Addnote extends Component {
 
 
         let token = localStorage.getItem('t');
-        const email = Jwt.verify(token, 'reactlogin');
+        const data = Jwt.verify(token, 'reactlogin');
 
-        console.log('getttinggg',email.email);
+        console.log('getttinggg',data);
 
         const Note = {
             title: this.state.title,
@@ -120,7 +120,8 @@ export default class Addnote extends Component {
             tags: this.state.tags,
             selectedOption: this.state.selectedOption,
             url:this.state.url,
-            email:email.email
+            email:data.data.email,
+            
         }
 
 
